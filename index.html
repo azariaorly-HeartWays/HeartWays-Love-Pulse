@@ -1,0 +1,50 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>HeartWays @ Azure — Global Love Pulse</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+:root{--bg1:#f3f8ff;--bg2:#eaf3ff;}html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg1),var(--bg2));font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:1100px;margin:16px auto;padding:0 12px}.header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;background:#fff;border-radius:16px;box-shadow:0 12px 32px rgba(13,37,84,.08)}
+.logo img{height:48px}#map{height:520px;border-radius:16px;box-shadow:0 12px 32px rgba(13,37,84,.08)}
+.panel{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.card{background:#fff;border-radius:16px;padding:12px;box-shadow:0 12px 32px rgba(13,37,84,.08)}
+.tiny{font-size:12px;opacity:.7}.pulse{width:10px;height:10px;border-radius:50%;background:#ff3b30;box-shadow:0 0 0 0 rgba(255,59,48,.6);animation:pulse 1.5s infinite;display:inline-block;vertical-align:middle;margin-right:6px}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,59,48,.6)}70%{box-shadow:0 0 0 16px rgba(255,59,48,0)}100%{box-shadow:0 0 0 0 rgba(255,59,48,0)}}audio{width:100%}
+@media (max-width:900px){.panel{grid-template-columns:1fr}#map{height:420px}}
+</style></head><body>
+<div class="wrap">
+  <div class="header">
+    <div class="logo"><img src="assets/logo_heartways_azure.png" alt="HeartWays @ Azure"></div>
+    <div><span class="pulse"></span><strong>Global Love Pulse — LIVE</strong></div>
+  </div>
+  <div id="map"></div>
+  <div class="panel">
+    <div class="card">
+      <h3>✨ Inspiration</h3>
+      <div id="inspo">You are loved. You are never alone. Breathe love in.</div>
+      <p class="tiny">The message strengthens at 08:18 and 20:18 (local time).</p>
+      <h3>🎧 Resonance</h3>
+      <audio id="resonance" controls loop src="assets/LoveWave_Nature_30s.mp3"></audio>
+      <label class="tiny"><input id="autoplay" type="checkbox"> Autoplay on load (where allowed)</label>
+    </div>
+    <div class="card">
+      <h3>🌍 Live Impact</h3>
+      <div id="impact" class="tiny">Waiting for events…</div>
+      <h3>🔌 Sensor Webhook</h3>
+      <p class="tiny">POST JSON to <code>/sensor</code> with <code>{ "city":"London" }</code> or <code>{ "lat":51.5,"lon":-0.12 }</code>.</p>
+    </div>
+  </div>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const map=L.map('map',{worldCopyJump:true}).setView([20,0],2);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:6,minZoom:2}).addTo(map);
+let sse;const impact=document.getElementById('impact');const audio=document.getElementById('resonance');const autoplay=document.getElementById('autoplay');
+autoplay.addEventListener('change',()=>{ if(autoplay.checked){ audio.play().catch(()=>{}); }});
+function addPulse(lat,lon,kind="sensor"){const color=kind==="ceremony"?"#ff3b30":"#1e90ff";const radius=kind==="ceremony"?600000:300000;const center=L.latLng(lat,lon);
+const circle=L.circle(center,{color,fillColor:color,fillOpacity:.25,radius});circle.addTo(map);setTimeout(()=>map.removeLayer(circle),7000);
+const marker=L.circleMarker(center,{radius:6,color,fillColor:color,fillOpacity:.9}).addTo(map);setTimeout(()=>map.removeLayer(marker),7000);}
+function connect(){sse=new EventSource('/events');sse.onmessage=(e)=>{try{const d=JSON.parse(e.data);
+if(d.type==='pulse'){addPulse(d.lat,d.lon,d.kind);impact.innerText=`Live pulses: ${d.count} • Last: ${(d.kind||'').toUpperCase()} @ ${d.city||d.tz||d.lat.toFixed(2)+','+d.lon.toFixed(2)}`;
+if(d.play&&autoplay.checked){audio.play().catch(()=>{})}}else if(d.type==='inspiration'){document.getElementById('inspo').innerText=d.text}}catch(err){}};
+sse.onerror=()=>setTimeout(connect,2000);}connect();
+</script></body></html>
