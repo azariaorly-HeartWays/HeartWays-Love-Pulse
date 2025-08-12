@@ -1,0 +1,19 @@
+[
+  {"name":"Jerusalem","lat":31.7683,"lon":35.2137,"tz":"Asia/Jerusalem"},
+  {"name":"London","lat":51.5074,"lon":-0.1278,"tz":"Europe/London"},
+  {"name":"New York","lat":40.7128,"lon":-74.0060,"tz":"America/New_York"},
+  {"name":"Los Angeles","lat":34.0522,"lon":-118.2437,"tz":"America/Los_Angeles"},
+  {"name":"Mexico City","lat":19.4326,"lon":-99.1332,"tz":"America/Mexico_City"},
+  {"name":"São Paulo","lat":-23.5505,"lon":-46.6333,"tz":"America/Sao_Paulo"},
+  {"name":"Buenos Aires","lat":-34.6037,"lon":-58.3816,"tz":"America/Argentina/Buenos_Aires"},
+  {"name":"Cape Town","lat":-33.9249,"lon":18.4241,"tz":"Africa/Johannesburg"},
+  {"name":"Cairo","lat":30.0444,"lon":31.2357,"tz":"Africa/Cairo"},
+  {"name":"Dubai","lat":25.2048,"lon":55.2708,"tz":"Asia/Dubai"},
+  {"name":"Mumbai","lat":19.0760,"lon":72.8777,"tz":"Asia/Kolkata"},
+  {"name":"Beijing","lat":39.9042,"lon":116.4074,"tz":"Asia/Shanghai"},
+  {"name":"Tokyo","lat":35.6895,"lon":139.6917,"tz":"Asia/Tokyo"},
+  {"name":"Seoul","lat":37.5665,"lon":126.9780,"tz":"Asia/Seoul"},
+  {"name":"Singapore","lat":1.3521,"lon":103.8198,"tz":"Asia/Singapore"},
+  {"name":"Sydney","lat":-33.8688,"lon":151.2093,"tz":"Australia/Sydney"},
+  {"name":"Auckland","lat":-36.8485,"lon":174.7633,"tz":"Pacific/Auckland"}
+]
