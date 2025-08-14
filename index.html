@@ -3,86 +3,105 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>HeartWays — דמו קליל</title>
+<title>HeartWays — דמו</title>
+<meta name="theme-color" content="#eaf6ff">
 <style>
   :root{
-    --bg1:#eaf6ff; --bg2:#ffffff; --ink:#0e3a5a; --soft:#2f6a9f; --accent:#2e86ff;
-    --glass: rgba(255,255,255,.78); --sh: 0 12px 28px rgba(0,0,0,.12);
+    --ink:#0e3a5a; --soft:#2f6a9f; --accent:#2e86ff;
+    --glass:rgba(255,255,255,.78); --sh:0 12px 28px rgba(0,0,0,.12);
   }
   *{box-sizing:border-box} html,body{height:100%}
   body{
     margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-    background:linear-gradient(180deg,var(--bg1),var(--bg2)); color:var(--ink);
+    background:linear-gradient(180deg,#eaf6ff,#ffffff); color:var(--ink);
     display:grid; place-items:center; overflow-x:hidden; padding:16px;
   }
-  /* רקע אותיות גדול ושקוף, בתנועה איטית */
+  /* רקע אותיות שקוף בתנועה */
   .letters{
     position:fixed; inset:0; display:grid; place-items:center; pointer-events:none;
-    font-weight:900; font-size:16vmin; letter-spacing:.4vmin; opacity:.06; color:#0b2033;
-    animation: drift 28s linear infinite;
+    font-weight:900; font-size:16vmin; letter-spacing:.5vmin;
+    opacity:.06; color:#0b2033; animation:drift 26s linear infinite;
+    text-align:center; line-height:1.05;
   }
   @keyframes drift{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 
-  /* כרטיס מרכזי (ליקוויד-גלאס) */
+  /* קלף מרכזי (liquid-glass) */
   .card{
-    position:relative; z-index:1; width:min(92vw,720px);
+    position:relative; z-index:1; width:min(94vw,820px);
     background:var(--glass); backdrop-filter:blur(14px) saturate(140%);
     border-radius:20px; padding:18px; box-shadow:var(--sh); text-align:center;
   }
-  h1{margin:6px 0 2px; font-size:1.6rem}
+  @supports not ((backdrop-filter: blur(2px)) or (-webkit-backdrop-filter: blur(2px))){
+    .card,.choice,.note,.modal{ background:rgba(255,255,255,.95); }
+  }
+  h1{margin:4px 0 2px; font-size:1.6rem}
   .sub{margin:0 0 10px; color:var(--soft); font-weight:700}
 
-  /* שמש זוהרת (במקום כוכב) */
+  /* שמש זוהרת נקייה */
   .sun{
-    --a: var(--accent);
-    width:140px; height:140px; margin:10px auto 12px; border-radius:50%;
+    --a:var(--accent);
+    width:140px; height:140px; margin:8px auto 10px; border-radius:50%;
     background:
-      radial-gradient(circle at 50% 50%, #fffbe7 0 42%, rgba(255,255,255,0) 62%),
-      radial-gradient(circle at 50% 50%, rgba(255,255,255,.55) 0 30%, rgba(255,255,255,0) 60%),
-      radial-gradient(circle at 50% 50%, var(--a) 0 60%, rgba(255,255,255,0) 61%);
-    mask-image: radial-gradient(circle at 50% 50%, #000 56%, transparent 57%),
-                conic-gradient(from 0deg, #000 0 8deg, transparent 8deg 38deg);
-    -webkit-mask-composite: destination-over; mask-composite: exclude;
-    box-shadow: 0 20px 40px rgba(0,0,0,.16), 0 0 60px 10px rgba(46,134,255,.35);
-    animation: pulse 3.2s ease-in-out infinite;
+      radial-gradient(circle at 50% 50%, #fffbe7 0 42%, transparent 62%),
+      radial-gradient(circle at 50% 50%, rgba(255,255,255,.55) 0 32%, transparent 60%),
+      radial-gradient(circle at 50% 50%, var(--a) 0 60%, transparent 61%);
+    box-shadow: 0 20px 40px rgba(0,0,0,.16), 0 0 60px 12px rgba(46,134,255,.35);
+    animation:pulse 3.2s ease-in-out infinite;
   }
   @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
 
-  /* כפתורי בחירה – ריפל רך */
-  .choices{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:8px 0 6px}
-  .btn{
-    position:relative; border:0; border-radius:999px; padding:12px 18px;
-    background:linear-gradient(180deg,#eaf2ff,#dfe9ff); color:#103658; font-weight:900;
-    cursor:pointer; box-shadow:var(--sh); overflow:hidden; transition:transform .12s;
+  /* יהלום 1–2–1 */
+  .grid{
+    --s:clamp(108px,20vw,160px);
+    display:grid; gap:14px; margin:8px auto; width:fit-content;
+    grid-template-columns:repeat(3,var(--s)); grid-template-rows:repeat(3,var(--s));
+    grid-template-areas: ". a ." "b . c" ". d .";
   }
-  .btn:hover{transform:translateY(-1px)}
-  .btn:active{transform:scale(.98)}
-  .btn::after{
-    content:""; position:absolute; inset:auto; width:0; height:0; border-radius:50%;
-    background:rgba(255,255,255,.6); transform:translate(-50%,-50%); opacity:.0;
-    transition: width .35s ease, height .35s ease, opacity .35s ease;
-  }
-  .btn:focus-visible{outline:3px solid rgba(46,134,255,.35)}
-  .btn[data-ripple="1"]::after{ width:220px; height:220px; opacity:.35 }
+  .cell{width:var(--s); height:var(--s)} .a{grid-area:a} .b{grid-area:b} .c{grid-area:c} .d{grid-area:d}
 
-  /* אלבום — מחברת צבעונית עם ∞ */
-  .notebook{
-    margin:12px auto 4px; width:min(92%,560px); height:auto; padding:14px 16px;
-    border-radius:16px; background:linear-gradient(135deg,#fff,#f3f7ff);
-    box-shadow:0 18px 40px rgba(0,0,0,.12); text-align:inherit; position:relative; overflow:hidden;
+  /* עיגולי בחירה – זכוכית וריפל רך */
+  .choice{
+    position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    width:100%; height:100%; border:0; border-radius:999px; cursor:pointer; padding:12px; text-align:center; overflow:hidden;
+    background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.82), rgba(255,255,255,.56) 70%),
+                var(--g, rgba(46,107,255,.08));
+    backdrop-filter: blur(12px) saturate(140%); box-shadow:0 8px 22px rgba(0,0,0,.1);
+    transition:transform .12s ease;
   }
-  .notebook::before{
+  .choice:hover{transform:translateY(-1px)} .choice:active{transform:scale(.98)}
+  .choice .t{font-weight:900} .choice .s{font-size:.9rem; color:#3b5f9a; margin-top:6px}
+  .choice::after{
+    content:""; position:absolute; inset:auto; width:0; height:0; border-radius:50%;
+    background:rgba(255,255,255,.6); transform:translate(-50%,-50%); opacity:0;
+    transition: width .35s, height .35s, opacity .35s;
+  }
+  .choice[data-ripple="1"]::after{ width:220px; height:220px; opacity:.35 }
+
+  /* מחברת אלבום ∞ */
+  .note{
+    margin:10px auto 0; width:min(92%,640px); padding:14px; border-radius:16px;
+    background:linear-gradient(135deg,#fff,#f3f7ff); box-shadow:0 18px 40px rgba(0,0,0,.12);
+    text-align:inherit; position:relative;
+  }
+  .note::before{
     content:""; position:absolute; right:0; top:0; bottom:0; width:16px;
     background:linear-gradient(180deg,#ffb3ca,#ffd7e8);
   }
-  .label{display:inline-flex;align-items:center;gap:.4rem;background:#edf3ff;padding:.45rem .8rem;border-radius:12px;font-weight:900;box-shadow:0 6px 16px rgba(0,0,0,.08)}
+  .label{display:inline-flex; align-items:center; gap:.45rem; background:#edf3ff; padding:.45rem .8rem; border-radius:12px; font-weight:900; box-shadow:0 6px 16px rgba(0,0,0,.08)}
   .infty{font-weight:900}
-
   .list{margin:8px 0 0; line-height:1.7; font-weight:800; color:#204b82}
-  .enc{margin:6px 0 0; color:#2c5c94; font-weight:700; font-style:italic}
+  .muted{color:#2c5c94; font-weight:700; font-style:italic; margin-top:6px}
+  .row{display:flex; gap:10px; justify-content:center; margin-top:8px; flex-wrap:wrap}
+  .pill{border:0; border-radius:999px; padding:12px 18px; background:linear-gradient(180deg,#eef4ff,#e3ecff); font-weight:900; color:#123b66; box-shadow:var(--sh); cursor:pointer}
 
-  .row{display:flex;gap:10px;justify-content:center;margin-top:8px;flex-wrap:wrap}
-  .pill{border:0;border-radius:999px;padding:12px 18px;background:linear-gradient(180deg,#eef4ff,#e3ecff);font-weight:900;color:#123b66;box-shadow:var(--sh);cursor:pointer}
+  /* מודאל סיכום בתוך הדף */
+  .ov{position:fixed; inset:0; background:rgba(10,20,30,.28); display:none; place-items:center; z-index:9999}
+  .modal{
+    background:rgba(255,255,255,.96); backdrop-filter:blur(10px);
+    border-radius:18px; box-shadow:var(--sh); padding:18px; width:min(92vw,520px); text-align:center;
+  }
+  .act{display:grid; gap:8px; margin-top:10px}
+  .btn{border:0; border-radius:999px; padding:12px 16px; background:#e9f1ff; font-weight:900; color:#103658; cursor:pointer}
 </style>
 </head>
 <body>
@@ -94,105 +113,116 @@
 
     <div class="sun" id="sun"></div>
 
-    <div class="choices" id="choices">
-      <button class="btn" data-k="שמחה">שמחה</button>
-      <button class="btn" data-k="השראה">השראה</button>
-      <button class="btn" data-k="רוגע">רוגע</button>
-      <button class="btn" data-k="סקרנות">סקרנות</button>
-    </div>
-
-    <section class="notebook" id="album" hidden>
-      <span class="label">אלבום <span class="infty">∞</span></span>
-      <div class="list" id="list"></div>
-      <div class="enc" id="enc"></div>
+    <!-- יהלום 1–2–1 -->
+    <section class="grid" id="grid" aria-label="בחירה ראשונה">
+      <div class="cell a"></div><div class="cell b"></div><div class="cell c"></div><div class="cell d"></div>
     </section>
 
-    <div class="row">
-      <button class="pill" id="peek" hidden>📔 פתחי אלבום</button>
-      <button class="pill" id="again" hidden>בחירה נוספת</button>
-    </div>
+    <!-- אלבום/משוב -->
+    <section class="note" id="album" hidden>
+      <span class="label">אלבום <span class="infty">∞</span></span>
+      <div class="list" id="list"></div>
+      <div class="muted" id="muted"></div>
+      <div class="row">
+        <button class="pill" id="again" hidden>בחירה נוספת</button>
+        <button class="pill" id="reset" hidden>איפוס</button>
+      </div>
+    </section>
   </main>
+
+  <!-- מודאל סיכום -->
+  <div class="ov" id="ov" role="dialog" aria-modal="true" aria-labelledby="sumTitle">
+    <div class="modal">
+      <div class="sun" style="--a:#ffcf66;width:110px;height:110px;margin:0 auto 10px"></div>
+      <h2 id="sumTitle">נבחר:</h2>
+      <p id="sumLine" style="margin:.2rem 0 .6rem;color:#214c83;font-weight:800"></p>
+      <div class="act">
+        <button class="btn" id="act1">נשימה 60 שניות</button>
+        <button class="btn" id="act2">רעיון ראשון</button>
+        <button class="btn" id="act3">חיבור קצר</button>
+        <button class="btn" id="close">הבנתי, מתגשם</button>
+      </div>
+    </div>
+  </div>
 
 <script>
 (() => {
-  const $ = s => document.querySelector(s);
-  const $$ = s => [...document.querySelectorAll(s)];
+  const $=s=>document.querySelector(s);
 
-  // אלבום (עד 4 בחירות)
-  const Store = {
-    key: 'hw_album_demo',
+  /* שלבים, צבעים וטקסטים */
+  const STAGES=[
+    {k:'להיות',  sub:'שקט עדין',         from:'#FFF1C9', to:'#FFD991', accent:'#CCA24A',
+     line:n=>`בחרת להיות — שקט קטן עושה פלאים. צעד ${n}.`},
+    {k:'לשחק',   sub:'קלילות ותנועה',     from:'#D9FFE7', to:'#A6F4C5', accent:'#2FBF71',
+     line:n=>`בחרת לשחק — תנועה קטנה מזיזה הרים. צעד ${n}.`},
+    {k:'ליצור',  sub:'רעיון + צעד ראשון', from:'#EBDFFF', to:'#CAB7FF', accent:'#8B6CF6',
+     line:n=>`בחרת ליצור — התחלה טובה היא חצי דרך. צעד ${n}.`},
+    {k:'להתחבר', sub:'לב אל לב',          from:'#E7F2FF', to:'#FFD6E6', accent:'#4BA3FF',
+     line:n=>`בחרת להתחבר — הודעה קטנה משנה יום. צעד ${n}.`}
+  ];
+  const rgba=(h,a)=>{const m=h.slice(1),v=parseInt(m,16);return`rgba(${(v>>16)&255},${(v>>8)&255},${v&255},${a})`};
+  const setAccent=x=>document.documentElement.style.setProperty('--accent',x);
+
+  /* אלבום (עד 4 בחירות) */
+  const Store={
+    key:'hw_album_final',
     load(){ try { return JSON.parse(localStorage.getItem(this.key)||'[]'); } catch { return []; } },
     save(v){ try { localStorage.setItem(this.key, JSON.stringify(v)); } catch {} },
-    push(x){ const l=this.load(); if(l.length<4) l.push(x); this.save(l); return l; }
+    push(x){ const l=this.load(); if(l.length<4) l.push(x); this.save(l); return l; },
+    clear(){ localStorage.removeItem(this.key); }
   };
 
-  // ריפל רך על כפתורים
-  $$('#choices .btn').forEach(b=>{
-    b.addEventListener('click', e=>{
-      b.setAttribute('data-ripple','1');
-      setTimeout(()=>b.removeAttribute('data-ripple'),350);
-      onChoose(b.dataset.k);
-    });
+  /* בניית 4 עיגולים */
+  ['a','b','c','d'].forEach((area,i)=>{
+    const st=STAGES[i], host=document.querySelector('.'+area);
+    const b=document.createElement('button'); b.className='choice';
+    b.style.setProperty('--g',`linear-gradient(180deg,${rgba(st.from,.9)},${rgba(st.to,.8)})`);
+    b.innerHTML=`<div class="t">${st.k}</div><div class="s">${st.sub}</div>`;
+    b.addEventListener('click',()=>{ b.setAttribute('data-ripple','1'); setTimeout(()=>b.removeAttribute('data-ripple'),350); onPick(st); });
+    host.appendChild(b);
   });
 
-  function onChoose(item){
-    // שומר באלבום (עד 4)
-    const list = Store.push({ t: Date.now(), k: item });
-
-    // חלון קטן עם סיכום ואופציות פעולה
-    const w = window.open('', '_blank', 'width=420,height=360');
-    if (w && !w.closed) {
-      w.document.write(`
-        <!doctype html><meta charset="utf-8">
-        <title>נבחר: ${item}</title>
-        <style>
-          body{font-family:system-ui,Segoe UI,Arial;margin:0;display:grid;place-items:center;height:100vh;background:linear-gradient(180deg,#f6fbff,#ffffff);color:#103658;text-align:center}
-          .box{background:#ffffffcc;backdrop-filter:blur(8px);border-radius:16px;padding:20px;box-shadow:0 12px 28px rgba(0,0,0,.12);max-width:360px}
-          h2{margin:.2rem 0 .6rem}
-          .ops{display:grid;gap:8px;margin-top:10px}
-          button{border:0;border-radius:999px;padding:10px 14px;background:#e9f1ff;font-weight:800;color:#103658;cursor:pointer}
-        </style>
-        <div class="box">
-          <h2>בחרת: ${item}</h2>
-          <p>המשך קליל ומומלץ:</p>
-          <div class="ops">
-            <button onclick="alert('נשימה 60 שניות – התחלה רכה')">נשימה קצרה</button>
-            <button onclick="alert('רשמי רעיון אחד קטן')">רעיון ראשון</button>
-            <button onclick="alert('הודעת לב לאדם אחד')">חיבור קצר</button>
-            <button onclick="window.close()">חזרה לדמו</button>
-          </div>
-        </div>
-      `);
-      w.document.close();
-    }
-
-    // עדכון אלבום בדף הראשי
-    renderAlbum(list);
-    $('#peek').hidden = false;
-    $('#again').hidden = false;
+  /* בחירה → מודאל סיכום → שמירה */
+  let pending=null;
+  function onPick(st){
+    pending=st; setAccent(st.accent);
+    const n = Store.load().length + 1;
+    $('#sumTitle').textContent = `נבחר: ${st.k}`;
+    $('#sumLine').textContent  = st.line(n);
+    $('#ov').style.display='grid';
   }
 
+  /* פעולות מוצעות (פידבק עדין בשורת הסיכום) */
+  const tips={
+    act1:`נשימה: שאיפה 4, החזקה 4, נשיפה 4 — דקה אחת.`,
+    act2:`רשמו רעיון אחד קטן שתרצו להזיז היום.`,
+    act3:`הודעת לב לאדם אחד — מילה טובה משנה יום.`
+  };
+  $('#act1').onclick=()=>$('#sumLine').textContent=tips.act1;
+  $('#act2').onclick=()=>$('#sumLine').textContent=tips.act2;
+  $('#act3').onclick=()=>$('#sumLine').textContent=tips.act3;
+
+  $('#close').onclick=()=>{
+    if(!pending) return;
+    const list=Store.push({t:Date.now(), k:pending.k, accent:pending.accent});
+    $('#ov').style.display='none'; renderAlbum(list); pending=null;
+  };
+
+  /* אלבום/מחברת */
   function renderAlbum(list){
-    const album = $('#album'), out = $('#list'), enc = $('#enc');
-    album.hidden = false;
-    out.innerHTML = list.map((e,i)=> `${i+1}. ${e.k}`).join(' • ');
-    enc.textContent = list.length < 4
-      ? 'יפה! עוד נגיעה של סקרנות ותגלו שערים נוספים ✦'
-      : 'הדמו מלא — אפשר לאפס ולהתחיל מסלול חדש';
+    const alb=$('#album'), out=$('#list'), msg=$('#muted');
+    alb.hidden=false;
+    out.innerHTML = list.map((e,i)=>`${i+1}. ${e.k}`).join(' • ');
+    const left=4-list.length;
+    msg.textContent = left>0 ? `יפה! עוד ${left} לבחירה בדמו · נשמר באלבום ∞`
+                             : `הדמו מלא · אפשר לאפס ולהתחיל מסלול חדש`;
+    $('#again').hidden=false; $('#reset').hidden=false;
   }
+  $('#again').onclick=()=>location.reload();
+  $('#reset').onclick=()=>{ Store.clear(); location.reload(); };
 
-  // כפתורי תחתית
-  $('#peek').addEventListener('click', () => {
-    const list = Store.load();
-    if (!list.length) return;
-    alert('אלבום ∞\n' + list.map((e,i)=>`${i+1}. ${e.k}`).join('\n'));
-  });
-
-  $('#again').addEventListener('click', () => location.reload());
-
-  // טעינה ראשונית — אם יש כבר אלבום
-  const existing = Store.load();
-  if (existing.length){ renderAlbum(existing); $('#peek').hidden=false; $('#again').hidden=false; }
+  /* אם היו בחירות קודמות */
+  const existing=Store.load(); if(existing.length) renderAlbum(existing);
 })();
 </script>
 </body>
