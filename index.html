@@ -7,8 +7,9 @@
 <meta name="theme-color" content="#eaf6ff" />
 <style>
   :root{
-    /* רספונסיביות אמיתית */
+    /* רספונסיביות */
     --fs-h1: clamp(1.25rem, 1rem + 1.4vw, 1.9rem);
+    --fs-h2: clamp(1.05rem, .95rem + 1vw, 1.4rem);
     --fs-sub: clamp(.92rem, .84rem + .6vw, 1.1rem);
     --fs-body: clamp(.95rem, .9rem + .35vw, 1.05rem);
     --diam: clamp(96px, 20vw, 140px);
@@ -25,19 +26,15 @@
   }
 
   /* אותיות שקופות בתנועה */
-  .letters{
-    position:fixed; inset:0; display:grid; place-items:center; pointer-events:none;
+  .letters{position:fixed; inset:0; display:grid; place-items:center; pointer-events:none;
     font-weight:900; font-size:15vmin; letter-spacing:.5vmin; opacity:.06; color:#0b2033;
-    animation:drift 26s linear infinite; text-align:center; line-height:1.05;
-  }
+    animation:drift 26s linear infinite; text-align:center; line-height:1.05}
   @keyframes drift{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 
-  /* כרטיס זכוכית */
-  .card{
-    position:relative; z-index:1; width:min(96vw, 860px);
+  /* קלף זכוכית */
+  .card{position:relative; z-index:1; width:min(96vw, 860px);
     background:var(--glass); backdrop-filter:blur(14px) saturate(140%);
-    border-radius:20px; padding:clamp(12px,2vw,18px); box-shadow:var(--sh); text-align:center;
-  }
+    border-radius:22px; padding:clamp(12px,2vw,18px); box-shadow:var(--sh); text-align:center}
   @supports not ((backdrop-filter: blur(2px)) or (-webkit-backdrop-filter: blur(2px))){
     .card,.choice,.note,.modal{ background:rgba(255,255,255,.96); }
   }
@@ -47,65 +44,69 @@
   .logo{display:inline-flex;align-items:center;gap:.55rem}
   .logo svg{width:clamp(26px,3vw,38px);height:auto;filter:drop-shadow(0 2px 6px rgba(0,0,0,.12))}
   .logo .w{font-weight:900;letter-spacing:.02em;font-size:clamp(.95rem,.9rem + .5vw,1.15rem);color:#14508a}
-  .ghost{width:clamp(26px,3vw,38px)} /* שמירת סימטריה */
+  .ghost{width:clamp(26px,3vw,38px)}
 
   h1{margin:.2rem 0 .1rem;font-size:var(--fs-h1)}
   .sub{margin:0 0 8px;color:var(--soft);font-weight:700;font-size:var(--fs-sub)}
 
   /* שמש זוהרת */
-  .sun{
-    --a:var(--accent);
-    width:clamp(110px, 13vw, 150px); height:clamp(110px, 13vw, 150px);
+  .sun{--a:var(--accent); width:clamp(110px, 13vw, 150px); height:clamp(110px, 13vw, 150px);
     margin:6px auto 8px; border-radius:50%;
     background:
       radial-gradient(circle at 50% 50%, #fffbe7 0 42%, transparent 62%),
       radial-gradient(circle at 50% 50%, rgba(255,255,255,.55) 0 32%, transparent 60%),
       radial-gradient(circle at 50% 50%, var(--a) 0 60%, transparent 61%);
     box-shadow: 0 18px 36px rgba(0,0,0,.15), 0 0 50px 10px rgba(46,134,255,.3);
-    animation:pulse 3.2s ease-in-out infinite;
-  }
+    animation:pulse 3.2s ease-in-out infinite}
   @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
 
   /* יהלום 1–2–1 */
-  .grid{
-    display:grid; gap:clamp(10px, 1.8vw, 16px); margin:8px auto; width:fit-content;
+  .grid{display:grid; gap:clamp(10px, 1.8vw, 16px); margin:8px auto; width:fit-content;
     grid-template-columns:repeat(3, var(--diam)); grid-template-rows:repeat(3, var(--diam));
-    grid-template-areas:". a ." "b . c" ". d .";
-  }
+    grid-template-areas:". a ." "b . c" ". d ."}
   .cell{width:var(--diam);height:var(--diam)} .a{grid-area:a}.b{grid-area:b}.c{grid-area:c}.d{grid-area:d}
 
   /* כפתורי בחירה */
-  .choice{
-    position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  .choice{position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center;
     width:100%; height:100%; border:0; border-radius:999px; cursor:pointer; padding:12px; text-align:center; overflow:hidden;
     background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.82), rgba(255,255,255,.56) 70%),
                 var(--g, rgba(46,107,255,.08));
     backdrop-filter: blur(12px) saturate(140%); box-shadow:0 8px 22px rgba(0,0,0,.1);
-    transition:transform .12s ease;
-  }
+    transition:transform .12s ease}
   .choice:hover{transform:translateY(-1px)} .choice:active{transform:scale(.98)}
   .choice .t{font-weight:900;font-size:clamp(.98rem,.9rem + .35vw,1.12rem)}
   .choice .s{font-size:clamp(.86rem,.82rem + .25vw,.98rem);color:#3b5f9a;margin-top:6px}
-  .choice::after{content:"";position:absolute;inset:auto;width:0;height:0;border-radius:50%;background:rgba(255,255,255,.6);transform:translate(-50%,-50%);opacity:0;transition:width .35s,height .35s,opacity .35s}
+  .choice::after{content:"";position:absolute;inset:auto;width:0;height:0;border-radius:50%;
+    background:rgba(255,255,255,.6);transform:translate(-50%,-50%);opacity:0;transition:width .35s,height .35s,opacity .35s}
   .choice[data-ripple="1"]::after{width:220px;height:220px;opacity:.35}
 
-  /* אלבום ∞ נגיש מהתחלה */
-  .note{
-    margin:10px auto 0; width:min(96%, 780px); padding:clamp(10px,1.5vw,14px);
-    border-radius:16px; background:linear-gradient(135deg,#fff,#f3f7ff); box-shadow:0 18px 40px rgba(0,0,0,.12);
-    text-align:inherit; position:relative;
-  }
+  /* אינטרו (דף פתיחה) */
+  .intro{display:grid;gap:.6rem;place-items:center;margin:4px 0 10px}
+  .intro p{max-width:62ch;margin:0}
+  .cta{border:0;border-radius:999px;padding:12px 16px;background:linear-gradient(180deg,#eef4ff,#e3ecff);
+    font-weight:900;color:#123b66;box-shadow:var(--sh);cursor:pointer;font-size:var(--fs-body)}
+
+  /* אלבום ∞ – מעוגל יותר, מתקפל בלחיצה */
+  .note{margin:10px auto 0; width:min(96%, 780px); padding:clamp(10px,1.5vw,14px);
+    border-radius:22px; background:linear-gradient(135deg,#fff,#f3f7ff);
+    box-shadow:0 18px 40px rgba(0,0,0,.12); text-align:inherit; position:relative; overflow:hidden}
   .note::before{content:"";position:absolute;right:0;top:0;bottom:0;width:14px;background:linear-gradient(180deg,#ffb3ca,#ffd7e8)}
-  .label{display:inline-flex;align-items:center;gap:.45rem;background:#edf3ff;padding:.4rem .75rem;border-radius:12px;font-weight:900;box-shadow:0 6px 16px rgba(0,0,0,.08);font-size:var(--fs-body)}
+  .note-head{display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer}
+  .label{display:inline-flex;align-items:center;gap:.5rem;background:#edf3ff;padding:.5rem .85rem;border-radius:14px;
+    font-weight:900;box-shadow:0 6px 16px rgba(0,0,0,.08);font-size:var(--fs-body)}
   .infty{font-weight:900}
+  .chev{font-weight:900;color:#3b5f9a;transition:transform .25s}
+  .note.open .chev{transform:rotate(180deg)}
+  .note-body{max-height:0;overflow:hidden;transition:max-height .35s ease}
+  .note.open .note-body{max-height:420px}
   .list{margin:8px 0 0; line-height:1.8; font-weight:800; color:#204b82; font-size:var(--fs-body); min-height:1.8em}
-  .muted{color:#2c5c94; font-weight:700; font-style:italic; margin-top:6px; font-size:var(--fs-body)}
+  .muted{color:#2c5c94; font-weight:700; font-style:italic; margin:6px 0 0; font-size:var(--fs-body)}
   .row{display:flex;gap:10px;justify-content:center;margin-top:8px;flex-wrap:wrap}
-  .pill{border:0;border-radius:999px;padding:10px 14px;background:linear-gradient(180deg,#eef4ff,#e3ecff);font-weight:900;color:#123b66;box-shadow:var(--sh);cursor:pointer;font-size:var(--fs-body)}
 
   /* מודאל סיכום */
   .ov{position:fixed; inset:0; background:rgba(10,20,30,.28); display:none; place-items:center; z-index:9999}
-  .modal{background:rgba(255,255,255,.96); backdrop-filter:blur(10px); border-radius:18px; box-shadow:var(--sh); padding:clamp(12px,1.6vw,16px); width:min(94vw, 560px); text-align:center}
+  .modal{background:rgba(255,255,255,.96); backdrop-filter:blur(10px); border-radius:18px; box-shadow:var(--sh);
+    padding:clamp(12px,1.6vw,16px); width:min(94vw, 560px); text-align:center}
   .act{display:grid; gap:8px; margin-top:10px}
   .btn{border:0;border-radius:999px;padding:10px 14px;background:#e9f1ff;font-weight:900;color:#103658;cursor:pointer;font-size:var(--fs-body)}
 </style>
@@ -126,20 +127,32 @@
       <div class="ghost" aria-hidden="true"></div>
     </div>
 
-    <div class="sun" id="sun"></div>
+    <!-- אינטרו (ללא חלון נוסף) -->
+    <section class="intro" id="intro">
+      <h2 style="margin:0;font-size:var(--fs-h2)">מה זה HeartWays?</h2>
+      <p>חוויה אינטראקטיבית שמכוונת אותך לבחור צעד קטן — שמרגיש נכון עכשיו. בלי הסברים ארוכים:
+         בוחרים פתיחה, מקבלים השראה קצרה ושלוש הצעות פעולה קטנות ואפשר לשמור לאלבום ∞.</p>
+      <p><strong>למי זה מיועד?</strong> לכל אדם — שמחפש יותר שמחה, יצירה, שקט או חיבור. זה טיזר קצר למסע גדול יותר.</p>
+      <button class="cta" id="start">יאללה, מתחילים</button>
+    </section>
+
+    <div class="sun" id="sun" hidden></div>
 
     <!-- יהלום 1–2–1 -->
-    <section class="grid" id="grid" aria-label="בחירה ראשונה">
+    <section class="grid" id="grid" aria-label="בחירה ראשונה" hidden>
       <div class="cell a"></div><div class="cell b"></div><div class="cell c"></div><div class="cell d"></div>
     </section>
 
-    <!-- אלבום פתוח תמיד עם רמז -->
+    <!-- אלבום ∞ (מעוגל ומתקפל) -->
     <section class="note" id="album">
-      <span class="label">אלבום <span class="infty">∞</span> · <span id="count">0</span></span>
-      <div class="list" id="list"></div>
-      <div class="muted" id="muted">כל בחירה נשמרת אוטומטית — אפשר לחזור לבחור מתי שבא ✦</div>
-      <div class="row">
-        <button class="pill" id="again" hidden>בחירה נוספת</button>
+      <div class="note-head" id="albumHead">
+        <span class="label">אלבום <span class="infty">∞</span> · <span id="count">0</span></span>
+        <span class="chev">⌄</span>
+      </div>
+      <div class="note-body" id="albumBody">
+        <div class="list" id="list"></div>
+        <div class="muted" id="muted">כל בחירה נשמרת אוטומטית — לחצו על הכותרת לפתיחה/סגירה ✦</div>
+        <div class="row"><button class="cta" id="again" hidden>בחירה נוספת</button></div>
       </div>
     </section>
   </main>
@@ -163,7 +176,7 @@
 (() => {
   const $=s=>document.querySelector(s);
 
-  /* שלבים עם פעולות מותאמות */
+  /* שלבים עם פעולות מותאמות וצבעי רקע */
   const STAGES=[
     {k:'להיות',  sub:'שקט עדין',         from:'#FFF1C9', to:'#FFD991', accent:'#CCA24A',
      acts:['נשימה 4–4–4 (60ש׳)','סריקת גוף קצרה','מתיחה/כתיבה 1 דקה'],
@@ -172,7 +185,7 @@
      acts:['ריקוד 30ש׳ לשיר אחד','חיוך/משחקון קטן','3 תנועות גוף חופשיות'],
      line:n=>`בחרת לשחק — קלילות קטנה מזיזה הרים. צעד ${n}.`},
     {k:'ליצור',  sub:'רעיון + צעד ראשון', from:'#EBDFFF', to:'#CAB7FF', accent:'#8B6CF6',
-     acts:['רעייון אחד למחברת','2 דק׳ צעד ראשון','שיתוף קצר לפידבק'],
+     acts:['רעיון אחד למחברת','2 דק׳ צעד ראשון','שיתוף קצר לפידבק'],
      line:n=>`בחרת ליצור — התחלה טובה היא חצי דרך. צעד ${n}.`},
     {k:'להתחבר', sub:'לב אל לב',          from:'#E7F2FF', to:'#FFD6E6', accent:'#4BA3FF',
      acts:['הודעת לב לאדם אחד','שיחת 5 דק׳','קביעת זמן מפגש'],
@@ -181,13 +194,21 @@
   const rgba=(h,a)=>{const m=h.slice(1),v=parseInt(m,16);return`rgba(${(v>>16)&255},${(v>>8)&255},${v&255},${a})`};
   const setAccent=x=>document.documentElement.style.setProperty('--accent',x);
 
-  /* אלבום (עד 4, בלי איפוס) */
+  /* אלבום (עד 4, רמז מההתחלה) */
   const Store={
-    key:'hw_album_last',
+    key:'hw_album_last2',
     load(){ try { return JSON.parse(localStorage.getItem(this.key)||'[]'); } catch { return []; } },
     save(v){ try { localStorage.setItem(this.key, JSON.stringify(v)); } catch {} },
     push(x){ const l=this.load(); if(l.length<4) l.push(x); this.save(l); return l; }
   };
+
+  /* התחלת אינטרו → מעבר לבחירה */
+  $('#start').addEventListener('click', ()=>{
+    $('#intro').hidden = true;
+    $('#sun').hidden = false;
+    $('#grid').hidden = false;
+    document.querySelector('.note').classList.add('open'); // פותח אלבום ברמז
+  });
 
   /* בונים 4 עיגולים */
   ['a','b','c','d'].forEach((area,i)=>{
@@ -199,7 +220,12 @@
     host.appendChild(b);
   });
 
-  /* בחירה → מודאל סיכום → שמירה */
+  /* פתיחת/סגירת האלבום */
+  $('#albumHead').addEventListener('click', ()=>{
+    $('#album').classList.toggle('open');
+  });
+
+  /* בחירה → מודאל סיכום → שמירה + צביעה */
   let pending=null;
   function onPick(st){
     pending=st; setAccent(st.accent);
@@ -210,7 +236,6 @@
     $('#act1').textContent = st.acts[0];
     $('#act2').textContent = st.acts[1];
     $('#act3').textContent = st.acts[2];
-    // רמז פעולה בלחיצה
     ['act1','act2','act3'].forEach((id,i)=>{
       $('#'+id).onclick = ()=>{ $('#sumLine').textContent = `מעולה — ${st.acts[i]} עכשיו.`; };
     });
@@ -220,29 +245,35 @@
   /* סגירה ושמירה */
   $('#close').onclick=()=>{
     if(!pending) return;
-    const list=Store.push({t:Date.now(), k:pending.k, accent:pending.accent});
-    $('#ov').style.display='none'; renderAlbum(list); pending=null;
+    const entry={t:Date.now(), k:pending.k, accent:pending.accent};
+    const list=Store.push(entry);
+    // צבעי האלבום לפי הבחירה האחרונה
+    $('#album').style.setProperty('--accent', pending.accent);
+    $('#album').style.boxShadow = `0 18px 40px ${rgba(pending.accent,.25)}`;
+    renderAlbum(list);
+    $('#ov').style.display='none';
+    pending=null;
   };
 
   /* אלבום נגיש + עידוד סיום */
   function renderAlbum(list){
     const out=$('#list'), msg=$('#muted'), cnt=$('#count');
     cnt.textContent = String(list.length);
-    out.innerHTML = list.length ? list.map((e,i)=>`${i+1}. ${e.k}`).join(' • ') : '';
+    out.innerHTML = list.length ? list.map((e,i)=>`<span style="color:${e.accent}">${i+1}. ${e.k}</span>`).join(' • ') : '';
     if(list.length===0){
-      msg.textContent = 'כל בחירה נשמרת אוטומטית — אפשר לחזור לבחור מתי שבא ✦';
+      msg.textContent = 'כל בחירה נשמרת אוטומטית — לחצו על הכותרת לפתיחה/סגירה ✦';
       $('#again').hidden = true;
     }else if(list.length<4){
       msg.textContent = 'יפה! את/ה בונה דרך קטנה שעושה הבדל. אפשר לבחור עוד ✦';
       $('#again').hidden = false;
     }else{
-      msg.textContent = 'יפה! הדמו נתן טעם של מסע. עוד קצת — והשער המלא נפתח ✦';
-      $('#again').hidden = false; // עדיין מאפשרים בחירה נוספת/רענון
+      // משפט עידוד וסקרנות לסיום טיזר
+      msg.textContent = 'נגעת בארבעה שערים — הלב כבר זוכר. המשך המסע מתקרב ✦';
+      $('#again').hidden = false;
     }
   }
-  $('#again').onclick=()=>location.reload();
 
-  /* אם היו בחירות קודמות */
+  // אם נכנסו לעמוד עם היסטוריה
   renderAlbum(Store.load());
 })();
 </script>
