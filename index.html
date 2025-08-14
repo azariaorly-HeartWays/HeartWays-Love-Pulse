@@ -1,50 +1,199 @@
-<!DOCTYPE html><html lang="en"><head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>HeartWays @ Azure — Global Love Pulse</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>HeartWays — דמו קליל</title>
 <style>
-:root{--bg1:#f3f8ff;--bg2:#eaf3ff;}html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg1),var(--bg2));font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
-.wrap{max-width:1100px;margin:16px auto;padding:0 12px}.header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;background:#fff;border-radius:16px;box-shadow:0 12px 32px rgba(13,37,84,.08)}
-.logo img{height:48px}#map{height:520px;border-radius:16px;box-shadow:0 12px 32px rgba(13,37,84,.08)}
-.panel{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.card{background:#fff;border-radius:16px;padding:12px;box-shadow:0 12px 32px rgba(13,37,84,.08)}
-.tiny{font-size:12px;opacity:.7}.pulse{width:10px;height:10px;border-radius:50%;background:#ff3b30;box-shadow:0 0 0 0 rgba(255,59,48,.6);animation:pulse 1.5s infinite;display:inline-block;vertical-align:middle;margin-right:6px}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,59,48,.6)}70%{box-shadow:0 0 0 16px rgba(255,59,48,0)}100%{box-shadow:0 0 0 0 rgba(255,59,48,0)}}audio{width:100%}
-@media (max-width:900px){.panel{grid-template-columns:1fr}#map{height:420px}}
-</style></head><body>
-<div class="wrap">
-  <div class="header">
-    <div class="logo"><img src="assets/logo_heartways_azure.png" alt="HeartWays @ Azure"></div>
-    <div><span class="pulse"></span><strong>Global Love Pulse — LIVE</strong></div>
-  </div>
-  <div id="map"></div>
-  <div class="panel">
-    <div class="card">
-      <h3>✨ Inspiration</h3>
-      <div id="inspo">You are loved. You are never alone. Breathe love in.</div>
-      <p class="tiny">The message strengthens at 08:18 and 20:18 (local time).</p>
-      <h3>🎧 Resonance</h3>
-      <audio id="resonance" controls loop src="assets/LoveWave_Nature_30s.mp3"></audio>
-      <label class="tiny"><input id="autoplay" type="checkbox"> Autoplay on load (where allowed)</label>
+  :root{
+    --bg1:#eaf6ff; --bg2:#ffffff; --ink:#0e3a5a; --soft:#2f6a9f; --accent:#2e86ff;
+    --glass: rgba(255,255,255,.78); --sh: 0 12px 28px rgba(0,0,0,.12);
+  }
+  *{box-sizing:border-box} html,body{height:100%}
+  body{
+    margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+    background:linear-gradient(180deg,var(--bg1),var(--bg2)); color:var(--ink);
+    display:grid; place-items:center; overflow-x:hidden; padding:16px;
+  }
+  /* רקע אותיות גדול ושקוף, בתנועה איטית */
+  .letters{
+    position:fixed; inset:0; display:grid; place-items:center; pointer-events:none;
+    font-weight:900; font-size:16vmin; letter-spacing:.4vmin; opacity:.06; color:#0b2033;
+    animation: drift 28s linear infinite;
+  }
+  @keyframes drift{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+  /* כרטיס מרכזי (ליקוויד-גלאס) */
+  .card{
+    position:relative; z-index:1; width:min(92vw,720px);
+    background:var(--glass); backdrop-filter:blur(14px) saturate(140%);
+    border-radius:20px; padding:18px; box-shadow:var(--sh); text-align:center;
+  }
+  h1{margin:6px 0 2px; font-size:1.6rem}
+  .sub{margin:0 0 10px; color:var(--soft); font-weight:700}
+
+  /* שמש זוהרת (במקום כוכב) */
+  .sun{
+    --a: var(--accent);
+    width:140px; height:140px; margin:10px auto 12px; border-radius:50%;
+    background:
+      radial-gradient(circle at 50% 50%, #fffbe7 0 42%, rgba(255,255,255,0) 62%),
+      radial-gradient(circle at 50% 50%, rgba(255,255,255,.55) 0 30%, rgba(255,255,255,0) 60%),
+      radial-gradient(circle at 50% 50%, var(--a) 0 60%, rgba(255,255,255,0) 61%);
+    mask-image: radial-gradient(circle at 50% 50%, #000 56%, transparent 57%),
+                conic-gradient(from 0deg, #000 0 8deg, transparent 8deg 38deg);
+    -webkit-mask-composite: destination-over; mask-composite: exclude;
+    box-shadow: 0 20px 40px rgba(0,0,0,.16), 0 0 60px 10px rgba(46,134,255,.35);
+    animation: pulse 3.2s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+
+  /* כפתורי בחירה – ריפל רך */
+  .choices{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:8px 0 6px}
+  .btn{
+    position:relative; border:0; border-radius:999px; padding:12px 18px;
+    background:linear-gradient(180deg,#eaf2ff,#dfe9ff); color:#103658; font-weight:900;
+    cursor:pointer; box-shadow:var(--sh); overflow:hidden; transition:transform .12s;
+  }
+  .btn:hover{transform:translateY(-1px)}
+  .btn:active{transform:scale(.98)}
+  .btn::after{
+    content:""; position:absolute; inset:auto; width:0; height:0; border-radius:50%;
+    background:rgba(255,255,255,.6); transform:translate(-50%,-50%); opacity:.0;
+    transition: width .35s ease, height .35s ease, opacity .35s ease;
+  }
+  .btn:focus-visible{outline:3px solid rgba(46,134,255,.35)}
+  .btn[data-ripple="1"]::after{ width:220px; height:220px; opacity:.35 }
+
+  /* אלבום — מחברת צבעונית עם ∞ */
+  .notebook{
+    margin:12px auto 4px; width:min(92%,560px); height:auto; padding:14px 16px;
+    border-radius:16px; background:linear-gradient(135deg,#fff,#f3f7ff);
+    box-shadow:0 18px 40px rgba(0,0,0,.12); text-align:inherit; position:relative; overflow:hidden;
+  }
+  .notebook::before{
+    content:""; position:absolute; right:0; top:0; bottom:0; width:16px;
+    background:linear-gradient(180deg,#ffb3ca,#ffd7e8);
+  }
+  .label{display:inline-flex;align-items:center;gap:.4rem;background:#edf3ff;padding:.45rem .8rem;border-radius:12px;font-weight:900;box-shadow:0 6px 16px rgba(0,0,0,.08)}
+  .infty{font-weight:900}
+
+  .list{margin:8px 0 0; line-height:1.7; font-weight:800; color:#204b82}
+  .enc{margin:6px 0 0; color:#2c5c94; font-weight:700; font-style:italic}
+
+  .row{display:flex;gap:10px;justify-content:center;margin-top:8px;flex-wrap:wrap}
+  .pill{border:0;border-radius:999px;padding:12px 18px;background:linear-gradient(180deg,#eef4ff,#e3ecff);font-weight:900;color:#123b66;box-shadow:var(--sh);cursor:pointer}
+</style>
+</head>
+<body>
+  <div class="letters" aria-hidden="true">אבגדהוזחט · זרימה · לב פתוח · יחד</div>
+
+  <main class="card" role="main" aria-label="HeartWays Demo">
+    <h1>איך בא לך להתחיל?</h1>
+    <p class="sub">בחר/י תחושה — נקפיץ רעיון קטן שמרגיש נכון עכשיו</p>
+
+    <div class="sun" id="sun"></div>
+
+    <div class="choices" id="choices">
+      <button class="btn" data-k="שמחה">שמחה</button>
+      <button class="btn" data-k="השראה">השראה</button>
+      <button class="btn" data-k="רוגע">רוגע</button>
+      <button class="btn" data-k="סקרנות">סקרנות</button>
     </div>
-    <div class="card">
-      <h3>🌍 Live Impact</h3>
-      <div id="impact" class="tiny">Waiting for events…</div>
-      <h3>🔌 Sensor Webhook</h3>
-      <p class="tiny">POST JSON to <code>/sensor</code> with <code>{ "city":"London" }</code> or <code>{ "lat":51.5,"lon":-0.12 }</code>.</p>
+
+    <section class="notebook" id="album" hidden>
+      <span class="label">אלבום <span class="infty">∞</span></span>
+      <div class="list" id="list"></div>
+      <div class="enc" id="enc"></div>
+    </section>
+
+    <div class="row">
+      <button class="pill" id="peek" hidden>📔 פתחי אלבום</button>
+      <button class="pill" id="again" hidden>בחירה נוספת</button>
     </div>
-  </div>
-</div>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  </main>
+
 <script>
-const map=L.map('map',{worldCopyJump:true}).setView([20,0],2);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:6,minZoom:2}).addTo(map);
-let sse;const impact=document.getElementById('impact');const audio=document.getElementById('resonance');const autoplay=document.getElementById('autoplay');
-autoplay.addEventListener('change',()=>{ if(autoplay.checked){ audio.play().catch(()=>{}); }});
-function addPulse(lat,lon,kind="sensor"){const color=kind==="ceremony"?"#ff3b30":"#1e90ff";const radius=kind==="ceremony"?600000:300000;const center=L.latLng(lat,lon);
-const circle=L.circle(center,{color,fillColor:color,fillOpacity:.25,radius});circle.addTo(map);setTimeout(()=>map.removeLayer(circle),7000);
-const marker=L.circleMarker(center,{radius:6,color,fillColor:color,fillOpacity:.9}).addTo(map);setTimeout(()=>map.removeLayer(marker),7000);}
-function connect(){sse=new EventSource('/events');sse.onmessage=(e)=>{try{const d=JSON.parse(e.data);
-if(d.type==='pulse'){addPulse(d.lat,d.lon,d.kind);impact.innerText=`Live pulses: ${d.count} • Last: ${(d.kind||'').toUpperCase()} @ ${d.city||d.tz||d.lat.toFixed(2)+','+d.lon.toFixed(2)}`;
-if(d.play&&autoplay.checked){audio.play().catch(()=>{})}}else if(d.type==='inspiration'){document.getElementById('inspo').innerText=d.text}}catch(err){}};
-sse.onerror=()=>setTimeout(connect,2000);}connect();
-</script></body></html>
+(() => {
+  const $ = s => document.querySelector(s);
+  const $$ = s => [...document.querySelectorAll(s)];
+
+  // אלבום (עד 4 בחירות)
+  const Store = {
+    key: 'hw_album_demo',
+    load(){ try { return JSON.parse(localStorage.getItem(this.key)||'[]'); } catch { return []; } },
+    save(v){ try { localStorage.setItem(this.key, JSON.stringify(v)); } catch {} },
+    push(x){ const l=this.load(); if(l.length<4) l.push(x); this.save(l); return l; }
+  };
+
+  // ריפל רך על כפתורים
+  $$('#choices .btn').forEach(b=>{
+    b.addEventListener('click', e=>{
+      b.setAttribute('data-ripple','1');
+      setTimeout(()=>b.removeAttribute('data-ripple'),350);
+      onChoose(b.dataset.k);
+    });
+  });
+
+  function onChoose(item){
+    // שומר באלבום (עד 4)
+    const list = Store.push({ t: Date.now(), k: item });
+
+    // חלון קטן עם סיכום ואופציות פעולה
+    const w = window.open('', '_blank', 'width=420,height=360');
+    if (w && !w.closed) {
+      w.document.write(`
+        <!doctype html><meta charset="utf-8">
+        <title>נבחר: ${item}</title>
+        <style>
+          body{font-family:system-ui,Segoe UI,Arial;margin:0;display:grid;place-items:center;height:100vh;background:linear-gradient(180deg,#f6fbff,#ffffff);color:#103658;text-align:center}
+          .box{background:#ffffffcc;backdrop-filter:blur(8px);border-radius:16px;padding:20px;box-shadow:0 12px 28px rgba(0,0,0,.12);max-width:360px}
+          h2{margin:.2rem 0 .6rem}
+          .ops{display:grid;gap:8px;margin-top:10px}
+          button{border:0;border-radius:999px;padding:10px 14px;background:#e9f1ff;font-weight:800;color:#103658;cursor:pointer}
+        </style>
+        <div class="box">
+          <h2>בחרת: ${item}</h2>
+          <p>המשך קליל ומומלץ:</p>
+          <div class="ops">
+            <button onclick="alert('נשימה 60 שניות – התחלה רכה')">נשימה קצרה</button>
+            <button onclick="alert('רשמי רעיון אחד קטן')">רעיון ראשון</button>
+            <button onclick="alert('הודעת לב לאדם אחד')">חיבור קצר</button>
+            <button onclick="window.close()">חזרה לדמו</button>
+          </div>
+        </div>
+      `);
+      w.document.close();
+    }
+
+    // עדכון אלבום בדף הראשי
+    renderAlbum(list);
+    $('#peek').hidden = false;
+    $('#again').hidden = false;
+  }
+
+  function renderAlbum(list){
+    const album = $('#album'), out = $('#list'), enc = $('#enc');
+    album.hidden = false;
+    out.innerHTML = list.map((e,i)=> `${i+1}. ${e.k}`).join(' • ');
+    enc.textContent = list.length < 4
+      ? 'יפה! עוד נגיעה של סקרנות ותגלו שערים נוספים ✦'
+      : 'הדמו מלא — אפשר לאפס ולהתחיל מסלול חדש';
+  }
+
+  // כפתורי תחתית
+  $('#peek').addEventListener('click', () => {
+    const list = Store.load();
+    if (!list.length) return;
+    alert('אלבום ∞\n' + list.map((e,i)=>`${i+1}. ${e.k}`).join('\n'));
+  });
+
+  $('#again').addEventListener('click', () => location.reload());
+
+  // טעינה ראשונית — אם יש כבר אלבום
+  const existing = Store.load();
+  if (existing.length){ renderAlbum(existing); $('#peek').hidden=false; $('#again').hidden=false; }
+})();
+</script>
+</body>
+</html>
